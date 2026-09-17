@@ -1,0 +1,3 @@
+cmd /c "cd /d "$(CURRENT_DIRECTORY)\.." && mingw32-make && music_player.exe"
+Or 
+Alt + r

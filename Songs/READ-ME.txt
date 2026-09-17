@@ -1,0 +1,7 @@
+Put Songs in the Songs folder only, only .mp3 play
+DO NOT TOUCH THE .ttf in assets Folder
+
+Press on buttons for them to do actions OR:
+SPACEBAR -> PLAY/PAUSE
+RIGHT ARROW -> NEXT
+LEFT ARROW -> BACK
