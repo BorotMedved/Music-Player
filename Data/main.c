@@ -84,7 +84,7 @@ void initSDL(App *a)
 	}
 }
 
-void openDirectory(Song *s){
+void oD(Song *s){
 	
 	DIR *dir = opendir("Songs");
 
@@ -112,7 +112,7 @@ void openDirectory(Song *s){
 	
 }
 
-void playMusic(App *a, Song *s)
+void pM(App *a, Song *s)
 {
     if (s[a->cS].m != NULL) {
         Mix_FreeMusic(s[a->cS].m);
@@ -129,13 +129,13 @@ void playMusic(App *a, Song *s)
     Mix_PlayMusic(s[a->cS].m, 1);
 }
 
-void writeBName(App *a, Song *s){
+void wBN(App *a, Song *s){
 	SDL_Surface *t = TTF_RenderText_Solid(a->f,s[a->cS].n, (SDL_Color){255,255,255,255});
 	a->tN = SDL_CreateTextureFromSurface(a->r, t);
 	SDL_FreeSurface(t);
 }
 
-void writeBText(App *a, SDL_Texture **t){
+void wBT(App *a, SDL_Texture **t){
 	const SDL_Color c = {255,255,255,255};
 	SDL_Surface *bT[4] = {
 		TTF_RenderText_Solid(a->f, "Back", c), 
@@ -153,7 +153,7 @@ void writeBText(App *a, SDL_Texture **t){
 	SDL_FreeSurface(bT[3]);
 }
 
-void currentTMusic(App *a, Song *s)
+void cTM(App *a, Song *s)
 {
     static int lastSeconds = -1;
 
@@ -186,7 +186,7 @@ void currentTMusic(App *a, Song *s)
     SDL_FreeSurface(tS);
 }
 
-void cleanup(App *a, SDL_Texture **t, Song *s)
+void cU(App *a, SDL_Texture **t, Song *s)
 {
     for (int i = 0; i < 4; i++) {
         SDL_DestroyTexture(t[i]);
@@ -217,7 +217,7 @@ void cleanup(App *a, SDL_Texture **t, Song *s)
     SDL_Quit();
 }
 
-void playPause(App *a){
+void pP(App *a){
 	a->isP = !a->isP;
 					if(!a->isP){
 						Mix_ResumeMusic();
@@ -226,7 +226,7 @@ void playPause(App *a){
 					}
 }
 
-void next(App *a, Song *s){
+void n(App *a, Song *s){
 	Mix_HaltMusic();
 					
 					if(a->cS == s->sC - 1){
@@ -235,16 +235,16 @@ void next(App *a, Song *s){
 						a->cS++;
 					}
 					
-					playMusic(a,s);
+					pM(a,s);
 					if(a->isP == true){
 						a->isP = false;
 					}
 					
 					SDL_DestroyTexture(a->tN);
-					writeBName(a,s);
+					wBN(a,s);
 }
 
-void back(App *a, Song *s){
+void bk(App *a, Song *s){
 	Mix_HaltMusic();
 					
 					if(a->cS == 0){
@@ -253,16 +253,16 @@ void back(App *a, Song *s){
 						a->cS--;
 					}
 					
-					playMusic(a,s);
+					pM(a,s);
 					if(a->isP == true){
 						a->isP = false;
 					}
 					
 					SDL_DestroyTexture(a->tN);
-					writeBName(a,s);
+					wBN(a,s);
 }
 
-void doInput(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
+void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
 {
     SDL_Event e;
 
@@ -272,29 +272,29 @@ void doInput(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
         {
 			case SDL_KEYDOWN:
 				if(e.key.keysym.sym == SDLK_SPACE){
-					playPause(a);
+					pP(a);
 				}else if(e.key.keysym.sym == SDLK_LEFT){
-					back(a,s);
+					bk(a,s);
 				}else if(e.key.keysym.sym == SDLK_RIGHT){
-					next(a,s);
+					n(a,s);
 				}
 				break;
 			
             case SDL_QUIT:
-				cleanup(a,t,s);
+				cU(a,t,s);
 				exit(0);
                 break;
 				
 			case SDL_MOUSEBUTTONDOWN:
 				SDL_Point m = {e.button.x,e.button.y};
 				if(SDL_PointInRect(&m,&b[0])){
-					back(a,s);
+					bk(a,s);
 				}
 				if(SDL_PointInRect(&m,&b[1])){
-					next(a,s);
+					n(a,s);
 				}
 				if(SDL_PointInRect(&m,&b[2])){
-					playPause(a);
+					pP(a);
 				}
 				break;
 				
@@ -304,18 +304,18 @@ void doInput(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
     }
 }
 
-void prepareScene(App *a)
+void ppS(App *a)
 {
     SDL_SetRenderDrawColor(a->r, 0, 0, 0, 255);
     SDL_RenderClear(a->r);
 }
 
-void presentScene(App *a)
+void psS(App *a)
 {
     SDL_RenderPresent(a->r);
 }
 
-TTF_Font *loadFont(){
+TTF_Font *lF(){
 	
 	TTF_Font *f = TTF_OpenFont("Songs/assets/PressStart2P-Regular.ttf", 8);
 
@@ -325,7 +325,7 @@ TTF_Font *loadFont(){
 	return f;
 }
 
-void drawBText(App *a, SDL_Texture **t, const SDL_Rect *b){
+void dBT(App *a, SDL_Texture **t, const SDL_Rect *b){
 	SDL_RenderCopy(a->r, t[0], NULL, &b[0]);
 	SDL_RenderCopy(a->r, t[1], NULL, &b[1]);
 	if(a->isP == true){
@@ -339,16 +339,16 @@ void drawBText(App *a, SDL_Texture **t, const SDL_Rect *b){
 	
 }
 
-void drawB(App *a, const SDL_Rect *b){
+void dB(App *a, const SDL_Rect *b){
 	SDL_SetRenderDrawColor(a->r, 100, 100, 100, 255);
 	SDL_RenderFillRect(a->r, &b[0]);
 	SDL_RenderFillRect(a->r, &b[1]);
 	SDL_RenderFillRect(a->r, &b[2]);
 }
 
-void draw(App *a, SDL_Texture **t, const SDL_Rect *b){
-	drawB(a,b);
-	drawBText(a,t,b);
+void d(App *a, SDL_Texture **t, const SDL_Rect *b){
+	dB(a,b);
+	dBT(a,t,b);
 }
 
 int main(){
@@ -365,29 +365,29 @@ int main(){
 		{280, 16, 32,32}
 	};
 	
-	a.f = loadFont();
+	a.f = lF();
 	SDL_Texture *t[4] = {0};
 	
 	Song s[255] = {0};
-	openDirectory(s);
-	playMusic(&a,s);
+	oD(s);
+	pM(&a,s);
 	
-	writeBText(&a,t);
-	writeBName(&a,s);
+	wBT(&a,t);
+	wBN(&a,s);
 	
 	while(1){
-		currentTMusic(&a,s);
-		prepareScene(&a);
-		draw(&a, t, b);
-		doInput(&a,b,s, t);
-		presentScene(&a);
+		cTM(&a,s);
+		ppS(&a);
+		d(&a, t, b);
+		dI(&a,b,s, t);
+		psS(&a);
 		SDL_Delay(16);
 		if(Mix_PlayingMusic() == 0 && Mix_PausedMusic() != 1){
 			a.cS++;
-			playMusic(&a,s);
+			pM(&a,s);
 			
 			SDL_DestroyTexture(a.tN);
-			writeBName(&a,s);
+			wBN(&a,s);
 		}
 	}
 	return 0;
