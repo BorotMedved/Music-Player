@@ -131,7 +131,7 @@ void oD(App *a, SDL_Texture **t, Song *s){
 	
 	u8 i = 0;
 	while((e = readdir(dir)) != NULL){
-		if(strstr(e->d_name, ".mp3") != NULL){
+		if(strstr(e->d_name, ".mp3") != NULL || strstr(e->d_name, ".flac") != NULL || strstr(e->d_name, ".wav")){
 			strcpy(s[i].n,e->d_name);
 			snprintf(s[i].p,sizeof(s[i].p),"Songs/%s",e->d_name);
 			i++;
