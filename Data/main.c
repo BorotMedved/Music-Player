@@ -7,6 +7,8 @@
 #include <dirent.h>
 #include <windows.h>
 #include <psapi.h>
+#include <stdlib.h>
+#include <time.h>
 
 typedef int8_t i8;
 typedef int16_t i16;
@@ -39,6 +41,37 @@ typedef struct {
 	Mix_Music *m;
 	u8 sC;
 } Song;
+
+void cU(App *a, SDL_Texture **t, Song *s)
+{
+    for (u8 i = 0; i < 5; i++) {
+        SDL_DestroyTexture(t[i]);
+		t[i] = NULL;
+    }
+
+    SDL_DestroyTexture(a->tN);
+	a->tN = NULL;
+    SDL_DestroyTexture(a->cT);
+	a->cT = NULL;
+
+    for (u8 i = 0; i < s->sC; i++) {
+        Mix_FreeMusic(s[i].m);
+		s[i].m = NULL;
+    }
+
+    TTF_CloseFont(a->f);
+	a->f = NULL;
+	
+	SDL_DestroyRenderer(a->r);
+	a->r = NULL;
+	
+	SDL_DestroyWindow(a->w);
+	a->w = NULL;
+
+    Mix_CloseAudio();
+    TTF_Quit();
+    SDL_Quit();
+}
 
 void initSDL(App *a)
 {
@@ -84,12 +117,14 @@ void initSDL(App *a)
 	}
 }
 
-void oD(Song *s){
+void oD(App *a, SDL_Texture **t, Song *s){
 	
 	DIR *dir = opendir("Songs");
 
     if (dir == NULL) {
         printf("Could not open Songs folder\n");
+		cU(a,t,s);
+		exit(0);
     }
 	
 	struct dirent *e;
@@ -105,6 +140,7 @@ void oD(Song *s){
 	s->sC = i;
 	
 	if(s->sC == 0){
+		cU(a,t,s);
 		exit(0);
 	}
 	
@@ -114,19 +150,32 @@ void oD(Song *s){
 
 void pM(App *a, Song *s)
 {
-    if (s[a->cS].m != NULL) {
-        Mix_FreeMusic(s[a->cS].m);
-        s[a->cS].m = NULL;
-    }
+	u8 st = a->cS;
+	
+	do {
+        if (s[a->cS].m != NULL) {
+            Mix_FreeMusic(s[a->cS].m);
+            s[a->cS].m = NULL;
+        }
 
-    s[a->cS].m = Mix_LoadMUS(s[a->cS].p);
-
-    while (s[a->cS].m == NULL) {
-        a->cS++;
         s[a->cS].m = Mix_LoadMUS(s[a->cS].p);
-    }
 
-    Mix_PlayMusic(s[a->cS].m, 1);
+        if (s[a->cS].m != NULL) {
+            Mix_PlayMusic(s[a->cS].m, 1);
+            return;
+        }
+
+        printf("Failed to load: %s\n", s[a->cS].p);
+
+        a->cS++;
+
+        if (a->cS >= s->sC) {
+            a->cS = 0;
+        }
+
+    } while (a->cS != st);
+
+	printf("Could not load any songs.\n");
 }
 
 void wBN(App *a, Song *s){
@@ -137,20 +186,23 @@ void wBN(App *a, Song *s){
 
 void wBT(App *a, SDL_Texture **t){
 	const SDL_Color c = {255,255,255,255};
-	SDL_Surface *bT[4] = {
+	SDL_Surface *bT[5] = {
 		TTF_RenderText_Solid(a->f, "Back", c), 
 		TTF_RenderText_Solid(a->f, "Next", c),
 		TTF_RenderText_Solid(a->f, "Play", c),
-		TTF_RenderText_Solid(a->f, "Pause", c)
+		TTF_RenderText_Solid(a->f, "Pause", c),
+		TTF_RenderText_Solid(a->f, "Shuffle", c)
 	};
 	t[0] = SDL_CreateTextureFromSurface(a->r, bT[0]);
 	t[1] = SDL_CreateTextureFromSurface(a->r, bT[1]);
 	t[2] = SDL_CreateTextureFromSurface(a->r, bT[2]);
 	t[3] = SDL_CreateTextureFromSurface(a->r, bT[3]);
+	t[4] = SDL_CreateTextureFromSurface(a->r, bT[4]);
 	SDL_FreeSurface(bT[0]);
 	SDL_FreeSurface(bT[1]);
 	SDL_FreeSurface(bT[2]);
 	SDL_FreeSurface(bT[3]);
+	SDL_FreeSurface(bT[4]);
 }
 
 void cTM(App *a, Song *s)
@@ -186,36 +238,6 @@ void cTM(App *a, Song *s)
     SDL_FreeSurface(tS);
 }
 
-void cU(App *a, SDL_Texture **t, Song *s)
-{
-    for (int i = 0; i < 4; i++) {
-        SDL_DestroyTexture(t[i]);
-		t[i] = NULL;
-    }
-
-    SDL_DestroyTexture(a->tN);
-	a->tN = NULL;
-    SDL_DestroyTexture(a->cT);
-	a->cT = NULL;
-
-    for (int i = 0; i < s->sC; i++) {
-        Mix_FreeMusic(s[i].m);
-		s[i].m = NULL;
-    }
-
-    TTF_CloseFont(a->f);
-	a->f = NULL;
-	
-	SDL_DestroyRenderer(a->r);
-	a->r = NULL;
-	
-	SDL_DestroyWindow(a->w);
-	a->w = NULL;
-
-    Mix_CloseAudio();
-    TTF_Quit();
-    SDL_Quit();
-}
 
 void pP(App *a){
 	a->isP = !a->isP;
@@ -245,6 +267,9 @@ void n(App *a, Song *s){
 }
 
 void bk(App *a, Song *s){
+	
+	
+	
 	Mix_HaltMusic();
 					
 					if(a->cS == 0){
@@ -262,6 +287,30 @@ void bk(App *a, Song *s){
 					wBN(a,s);
 }
 
+void sh(App *a, Song *s){
+	
+	 u8 count = s->sC;
+	
+	for(u8 i = 0; i < s->sC;i++){
+		u8 r = rand() % s->sC;
+		if(i == r){
+			continue;
+		}
+		Song t = s[i];
+		s[i] = s[r];
+		s[r] = t;
+	}
+	
+	s[0].sC = count;
+	
+	Mix_HaltMusic();
+	a->cS = 0;
+	pM(a, s);
+	SDL_DestroyTexture(a->tN);
+	wBN(a, s);
+	
+}
+
 void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
 {
     SDL_Event e;
@@ -277,6 +326,9 @@ void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
 					bk(a,s);
 				}else if(e.key.keysym.sym == SDLK_RIGHT){
 					n(a,s);
+				}else if(e.key.keysym.sym == SDLK_s){
+					sh(a,s);
+					
 				}
 				break;
 			
@@ -295,6 +347,9 @@ void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
 				}
 				if(SDL_PointInRect(&m,&b[2])){
 					pP(a);
+				}
+				if(SDL_PointInRect(&m,&b[5])){
+					sh(a,s);
 				}
 				break;
 				
@@ -336,6 +391,7 @@ void dBT(App *a, SDL_Texture **t, const SDL_Rect *b){
 	}
 	SDL_RenderCopy(a->r, a->tN, NULL, &b[3]);
 	SDL_RenderCopy(a->r, a->cT, NULL, &b[4]);
+	SDL_RenderCopy(a->r, t[4], NULL, &b[5]);
 	
 }
 
@@ -344,6 +400,8 @@ void dB(App *a, const SDL_Rect *b){
 	SDL_RenderFillRect(a->r, &b[0]);
 	SDL_RenderFillRect(a->r, &b[1]);
 	SDL_RenderFillRect(a->r, &b[2]);
+	SDL_SetRenderDrawColor(a->r, 200, 80, 80, 255);
+	SDL_RenderFillRect(a->r, &b[5]);
 }
 
 void d(App *a, SDL_Texture **t, const SDL_Rect *b){
@@ -354,22 +412,25 @@ void d(App *a, SDL_Texture **t, const SDL_Rect *b){
 int main(){
 	App a = {0};
 	
+	srand(time(NULL));
+	
 	memset(&a, 0, sizeof(App));
 	initSDL(&a);
 	
-	const SDL_Rect b[5] = {
+	const SDL_Rect b[6] = {
 		{4,4,64,48},
 		{204,4,64,48},
 		{104,4,64,48},
 		{4, 64, 256, 32},
-		{280, 16, 32,32}
+		{280, 64, 32,32},
+		{280, 16, 32, 32}
 	};
 	
 	a.f = lF();
-	SDL_Texture *t[4] = {0};
+	SDL_Texture *t[5] = {0};
 	
 	Song s[255] = {0};
-	oD(s);
+	oD(&a,t,s);
 	pM(&a,s);
 	
 	wBT(&a,t);
