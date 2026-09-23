@@ -8,3 +8,4 @@ Press on buttons for them to do actions OR:
 SPACEBAR -> PLAY/PAUSE
 RIGHT ARROW -> NEXT
 LEFT ARROW -> BACK
+S -> SHUFFLE

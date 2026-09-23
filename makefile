@@ -6,7 +6,7 @@ SDLFLAGS = -IC:/msys64/ucrt64/include/SDL2
 LDFLAGS = -LC:/msys64/ucrt64/lib -lSDL2 -lSDL2_ttf -lSDL2_mixer -lpsapi -mwindows
 
 TARGET = music_player.exe
-SRC = Data/main.c
+SRC = Data/main.c Data/sound.c Data/textures.c Data/window.c
 RES = icon.o
 
 all: $(TARGET)
