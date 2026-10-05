@@ -1,26 +1,21 @@
 CC = gcc
-WINDRES = windres
 
 CFLAGS = -Wall -Wextra -std=c11 -DSDL_MAIN_HANDLED
-SDLFLAGS = -IC:/msys64/ucrt64/include/SDL2
-LDFLAGS = -LC:/msys64/ucrt64/lib -lSDL2 -lSDL2_ttf -lSDL2_mixer -lpsapi -mwindows
+SDLFLAGS = $(shell sdl2-config --cflags)
+LDFLAGS = $(shell sdl2-config --libs) -lSDL2_ttf -lSDL2_mixer
 
-TARGET = music_player.exe
+TARGET = music_player
 SRC = Data/main.c Data/sound.c Data/textures.c Data/window.c
-RES = icon.o
 
 all: $(TARGET)
 
-$(TARGET): $(SRC) $(RES)
-	$(CC) $(CFLAGS) $(SDLFLAGS) $(SRC) $(RES) -o $(TARGET) $(LDFLAGS)
-
-$(RES): icon.rc
-	$(WINDRES) icon.rc -o $(RES)
+$(TARGET): $(SRC)
+	$(CC) $(CFLAGS) $(SDLFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
 
 run: $(TARGET)
 	./$(TARGET)
 
 clean:
-	del /Q $(TARGET) $(RES) 2>nul
+	rm -f $(TARGET)
 
 .PHONY: all run clean

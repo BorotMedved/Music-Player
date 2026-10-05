@@ -7,7 +7,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
-#include <windows.h>
 
 typedef uint8_t u8;
 typedef uint16_t u16;
