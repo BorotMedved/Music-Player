@@ -1,7 +1,7 @@
 #include "window.h"
 
 void wBN(App *a, Song *s){
-	SDL_Surface *t = TTF_RenderText_Solid(a->f,s[a->cS].n, (SDL_Color){255,255,255,255});
+	SDL_Surface *t = TTF_RenderUTF8_Solid(a->f,s[a->cS].n, (SDL_Color){255,255,255,255});
 	a->tN = SDL_CreateTextureFromSurface(a->r, t);
 	SDL_FreeSurface(t);
 }
@@ -15,16 +15,11 @@ void wBT(App *a, SDL_Texture **t){
 		TTF_RenderText_Solid(a->f, "Pause", c),
 		TTF_RenderText_Solid(a->f, "Shuffle", c)
 	};
-	t[0] = SDL_CreateTextureFromSurface(a->r, bT[0]);
-	t[1] = SDL_CreateTextureFromSurface(a->r, bT[1]);
-	t[2] = SDL_CreateTextureFromSurface(a->r, bT[2]);
-	t[3] = SDL_CreateTextureFromSurface(a->r, bT[3]);
-	t[4] = SDL_CreateTextureFromSurface(a->r, bT[4]);
-	SDL_FreeSurface(bT[0]);
-	SDL_FreeSurface(bT[1]);
-	SDL_FreeSurface(bT[2]);
-	SDL_FreeSurface(bT[3]);
-	SDL_FreeSurface(bT[4]);
+	
+	for(u16 i = 0; i < 5 ; i++){
+		t[i] = SDL_CreateTextureFromSurface(a->r, bT[i]);
+		SDL_FreeSurface(bT[i]);
+	}
 }
 
 void cTM(App *a, Song *s)
@@ -62,7 +57,7 @@ void cTM(App *a, Song *s)
 
 TTF_Font *lF(){
 	
-	TTF_Font *f = TTF_OpenFont("Songs/assets/PressStart2P-Regular.ttf", 8);
+	TTF_Font *f = TTF_OpenFont("Assets/font.ttf", 8);
 
 	if (f == NULL) {
 		printf("Font failed: %s\n", TTF_GetError());

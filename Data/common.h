@@ -7,7 +7,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
-#include <windows.h>
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -17,7 +16,6 @@ typedef struct {
 	char n[256];
 	char p[512];
 	Mix_Music *m;
-	u8 sC;
 } Song;
 
 typedef struct {
@@ -33,6 +31,7 @@ typedef struct {
 	SDL_Texture *tN;
 	SDL_Texture *cT;
 	TTF_Font *f;
+	u8 sC;
 } App;
 
 #endif

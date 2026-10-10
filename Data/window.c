@@ -1,4 +1,5 @@
 #include "sound.h"
+#include "window.h"
 
 void cU(App *a, SDL_Texture **t, Song *s)
 {
@@ -12,7 +13,7 @@ void cU(App *a, SDL_Texture **t, Song *s)
     SDL_DestroyTexture(a->cT);
 	a->cT = NULL;
 
-    for (u8 i = 0; i < s->sC; i++) {
+    for (u8 i = 0; i < a->sC; i++) {
         Mix_FreeMusic(s[i].m);
 		s[i].m = NULL;
     }
@@ -73,6 +74,7 @@ void initSDL(App *a)
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
 		printf("Mixer failed: %s\n", Mix_GetError());
 	}
+	
 }
 
 void ppS(App *a)
