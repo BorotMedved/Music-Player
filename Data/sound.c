@@ -96,6 +96,17 @@ void n(App *a, Song *s){
 					wBN(a,s);
 }
 
+void c(App *a, Song *s, u8 sC){
+	Mix_HaltMusic();
+	a->cS = sC;
+	pM(a,s);
+	if(a->isP == true){
+		a->isP = false;
+	}
+	SDL_DestroyTexture(a->tN);
+	wBN(a,s);
+}
+
 void bk(App *a, Song *s){
 	
 	Mix_HaltMusic();
@@ -128,6 +139,8 @@ void sh(App *a, Song *s) {
 
     Mix_HaltMusic();
     a->cS = 0;
+	wSL(a,s);
+	a->displayChoice = 18;
 
     pM(a, s);
 

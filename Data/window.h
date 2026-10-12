@@ -8,6 +8,8 @@ void cU(App *a, SDL_Texture **t, Song *s);
 void initSDL(App *a);
 void ppS(App *a);
 void psS(App *a);
+void nL(App *a);
+void bL(App *a);
 void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t);
 
 #endif

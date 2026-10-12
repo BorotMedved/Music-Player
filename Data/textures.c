@@ -6,17 +6,48 @@ void wBN(App *a, Song *s){
 	SDL_FreeSurface(t);
 }
 
+void wSL(App *a, Song *s){
+	u16 y = 80;
+	for(u16 i = 0; i < a->sC;i++){
+		if(y > 420){
+			y = 80;
+		}
+		y += 20;
+		s[i].b = (SDL_Rect){4, y, 312, 16};
+		
+		SDL_Surface *t = TTF_RenderUTF8_Solid(a->f,s[i].n, (SDL_Color){255,255,255,255});
+		s[i].t = SDL_CreateTextureFromSurface(a->r, t);
+		SDL_FreeSurface(t);
+	}
+}
+
+void dSL(App *a, Song *s){
+    u16 start = a->displayChoice - 18;
+    u16 end = a->displayChoice;
+
+    for (u16 i = start; i < end && i < a->sC; i++) {
+        SDL_SetRenderDrawColor(a->r, 150, 10, 10, 255);
+        SDL_RenderFillRect(a->r, &s[i].b);
+        SDL_RenderCopy(a->r, s[i].t, NULL, &s[i].b);
+    }
+}
+
 void wBT(App *a, SDL_Texture **t){
 	const SDL_Color c = {255,255,255,255};
-	SDL_Surface *bT[5] = {
+	char sC[32];
+	snprintf(sC, sizeof(sC), "Songs: %u", (unsigned)a->sC);
+	SDL_Surface *bT[8] = {
 		TTF_RenderText_Solid(a->f, "Back", c), 
 		TTF_RenderText_Solid(a->f, "Next", c),
 		TTF_RenderText_Solid(a->f, "Play", c),
 		TTF_RenderText_Solid(a->f, "Pause", c),
-		TTF_RenderText_Solid(a->f, "Shuffle", c)
+		TTF_RenderText_Solid(a->f, "Shuffle", c),
+		TTF_RenderText_Solid(a->f, "<-", c),
+		TTF_RenderText_Solid(a->f, "->", c),
+		TTF_RenderText_Solid(a->f,sC, c)
 	};
 	
-	for(u16 i = 0; i < 5 ; i++){
+	for(u16 i = 0; i < 8 ; i++){
 		t[i] = SDL_CreateTextureFromSurface(a->r, bT[i]);
 		SDL_FreeSurface(bT[i]);
 	}
@@ -77,6 +108,9 @@ void dBT(App *a, SDL_Texture **t, const SDL_Rect *b){
 	SDL_RenderCopy(a->r, a->tN, NULL, &b[3]);
 	SDL_RenderCopy(a->r, a->cT, NULL, &b[4]);
 	SDL_RenderCopy(a->r, t[4], NULL, &b[5]);
+	SDL_RenderCopy(a->r, t[5], NULL, &b[6]);
+	SDL_RenderCopy(a->r, t[6], NULL, &b[7]);
+	SDL_RenderCopy(a->r, t[7], NULL, &b[8]);
 	
 }
 
@@ -87,9 +121,12 @@ void dB(App *a, const SDL_Rect *b){
 	SDL_RenderFillRect(a->r, &b[2]);
 	SDL_SetRenderDrawColor(a->r, 200, 80, 80, 255);
 	SDL_RenderFillRect(a->r, &b[5]);
+	SDL_RenderFillRect(a->r, &b[6]);
+	SDL_RenderFillRect(a->r, &b[7]);
 }
 
-void d(App *a, SDL_Texture **t, const SDL_Rect *b){
+void d(App *a, SDL_Texture **t, const SDL_Rect *b, Song *s){
 	dB(a,b);
+	dSL(a,s);
 	dBT(a,t,b);
 }

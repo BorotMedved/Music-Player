@@ -10,29 +10,35 @@ int main(){
 	srand(time(NULL));
 	initSDL(&a);
 	
-	const SDL_Rect b[6] = {
+	const SDL_Rect b[9] = {
 		{4,4,64,48},
 		{204,4,64,48},
 		{104,4,64,48},
 		{4, 64, 256, 32},
 		{280, 64, 32,32},
-		{280, 16, 32, 32}
+		{280, 16, 32, 32},
+		{4, 460, 16, 16},
+		{32, 460, 16, 16},
+		{50,460,64,16}
 	};
 	
 	a.f = lF();
-	SDL_Texture *t[5] = {0};
+	SDL_Texture *t[8] = {0};
 	
 	Song s[255] = {0};
+	a.displayChoice = 18;
 	oD(&a,t,s);
 	pM(&a,s);
 	
 	wBT(&a,t);
 	wBN(&a,s);
+	wSL(&a,s);
 	
 	while(1){
+		
 		cTM(&a,s);
 		ppS(&a);
-		d(&a, t, b);
+		d(&a, t, b, s);
 		dI(&a,b,s, t);
 		psS(&a);
 		SDL_Delay(16);

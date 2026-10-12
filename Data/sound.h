@@ -10,5 +10,6 @@ void pP(App *a);
 void n(App *a, Song *s);
 void bk(App *a, Song *s);
 void sh(App *a, Song *s);
+void c(App *a, Song *s, u8 sC);
 
 #endif

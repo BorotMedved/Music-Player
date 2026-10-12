@@ -16,11 +16,13 @@ typedef struct {
 	char n[256];
 	char p[512];
 	Mix_Music *m;
+	SDL_Rect b;
+	SDL_Texture *t;
 } Song;
 
 typedef struct {
 	u16 w;
-	u8 h;
+	u16 h;
 } Resolution;
 
 typedef struct {
@@ -32,6 +34,7 @@ typedef struct {
 	SDL_Texture *cT;
 	TTF_Font *f;
 	u8 sC;
+	u16 displayChoice; 
 } App;
 
 #endif

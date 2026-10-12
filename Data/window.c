@@ -3,9 +3,13 @@
 
 void cU(App *a, SDL_Texture **t, Song *s)
 {
-    for (u8 i = 0; i < 5; i++) {
+    for (u8 i = 0; i < 7; i++) {
         SDL_DestroyTexture(t[i]);
 		t[i] = NULL;
+    }
+	for (u8 i = 0; i < a->sC; i++) {
+        SDL_DestroyTexture(s[i].t);
+		s[i].t = NULL;
     }
 
     SDL_DestroyTexture(a->tN);
@@ -36,7 +40,7 @@ void initSDL(App *a)
 {
 	Resolution res;
 	res.w = 320;
-	res.h = 100;
+	res.h = 480;
 	
     u32 rFlags, wFlags;
 
@@ -88,6 +92,23 @@ void psS(App *a)
     SDL_RenderPresent(a->r);
 }
 
+void nL(App *a){
+	u16 barrier = a->displayChoice;
+	if(barrier < a->sC){
+		a->displayChoice += 18;
+	}
+}
+
+void bL(App *a){
+	u16 barrier = a->displayChoice;
+	if(barrier > 0){
+		a->displayChoice -= 18;
+	}
+	if(a->displayChoice <= 0){
+		a->displayChoice = 18;
+	}
+}
+
 void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
 {
     SDL_Event e;
@@ -128,6 +149,21 @@ void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
 				if(SDL_PointInRect(&m,&b[5])){
 					sh(a,s);
 				}
+				if(SDL_PointInRect(&m,&b[6])){
+					bL(a);
+				}
+				if(SDL_PointInRect(&m,&b[7])){
+					nL(a);
+				}
+				
+				u16 start = a->displayChoice - 18;
+				u16 end = a->displayChoice;
+				for (u16 i = start; i < end && i < a->sC; i++) {
+					if(SDL_PointInRect(&m,&s[i].b)){
+					c(a,s,i);
+					}
+				}
+					
 				break;
 				
             default:
