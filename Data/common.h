@@ -34,7 +34,8 @@ typedef struct {
 	SDL_Texture *cT;
 	TTF_Font *f;
 	u8 sC;
-	u16 displayChoice; 
+	u16 dC; 
+	u8 v;
 } App;
 
 #endif

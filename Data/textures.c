@@ -21,22 +21,11 @@ void wSL(App *a, Song *s){
 	}
 }
 
-void dSL(App *a, Song *s){
-    u16 start = a->displayChoice - 18;
-    u16 end = a->displayChoice;
-
-    for (u16 i = start; i < end && i < a->sC; i++) {
-        SDL_SetRenderDrawColor(a->r, 150, 10, 10, 255);
-        SDL_RenderFillRect(a->r, &s[i].b);
-        SDL_RenderCopy(a->r, s[i].t, NULL, &s[i].b);
-    }
-}
-
 void wBT(App *a, SDL_Texture **t){
 	const SDL_Color c = {255,255,255,255};
 	char sC[32];
 	snprintf(sC, sizeof(sC), "Songs: %u", (unsigned)a->sC);
-	SDL_Surface *bT[8] = {
+	SDL_Surface *bT[10] = {
 		TTF_RenderText_Solid(a->f, "Back", c), 
 		TTF_RenderText_Solid(a->f, "Next", c),
 		TTF_RenderText_Solid(a->f, "Play", c),
@@ -44,10 +33,12 @@ void wBT(App *a, SDL_Texture **t){
 		TTF_RenderText_Solid(a->f, "Shuffle", c),
 		TTF_RenderText_Solid(a->f, "<-", c),
 		TTF_RenderText_Solid(a->f, "->", c),
-		TTF_RenderText_Solid(a->f,sC, c)
+		TTF_RenderText_Solid(a->f,sC, c),
+		TTF_RenderText_Solid(a->f, "+", c),
+		TTF_RenderText_Solid(a->f, "-", c)
 	};
 	
-	for(u16 i = 0; i < 8 ; i++){
+	for(u16 i = 0; i < 10 ; i++){
 		t[i] = SDL_CreateTextureFromSurface(a->r, bT[i]);
 		SDL_FreeSurface(bT[i]);
 	}
@@ -86,15 +77,17 @@ void cTM(App *a, Song *s)
     SDL_FreeSurface(tS);
 }
 
-TTF_Font *lF(){
-	
-	TTF_Font *f = TTF_OpenFont("Assets/font.ttf", 8);
+void dSL(App *a, Song *s){
+    u16 start = a->dC - 18;
+    u16 end = a->dC;
 
-	if (f == NULL) {
-		printf("Font failed: %s\n", TTF_GetError());
-	}
-	return f;
+    for (u16 i = start; i < end && i < a->sC; i++) {
+        SDL_SetRenderDrawColor(a->r, 150, 10, 10, 255);
+        SDL_RenderFillRect(a->r, &s[i].b);
+        SDL_RenderCopy(a->r, s[i].t, NULL, &s[i].b);
+    }
 }
+
 
 void dBT(App *a, SDL_Texture **t, const SDL_Rect *b){
 	SDL_RenderCopy(a->r, t[0], NULL, &b[0]);
@@ -107,26 +100,46 @@ void dBT(App *a, SDL_Texture **t, const SDL_Rect *b){
 	}
 	SDL_RenderCopy(a->r, a->tN, NULL, &b[3]);
 	SDL_RenderCopy(a->r, a->cT, NULL, &b[4]);
-	SDL_RenderCopy(a->r, t[4], NULL, &b[5]);
-	SDL_RenderCopy(a->r, t[5], NULL, &b[6]);
-	SDL_RenderCopy(a->r, t[6], NULL, &b[7]);
-	SDL_RenderCopy(a->r, t[7], NULL, &b[8]);
+	for(u8 i = 5; i < 11;i++){
+		SDL_RenderCopy(a->r, t[i-1], NULL, &b[i]);
+	}
 	
 }
 
 void dB(App *a, const SDL_Rect *b){
 	SDL_SetRenderDrawColor(a->r, 100, 100, 100, 255);
-	SDL_RenderFillRect(a->r, &b[0]);
-	SDL_RenderFillRect(a->r, &b[1]);
-	SDL_RenderFillRect(a->r, &b[2]);
+	for(u8 i = 0; i < 3;i++){
+		SDL_RenderFillRect(a->r, &b[i]);
+	}
 	SDL_SetRenderDrawColor(a->r, 200, 80, 80, 255);
-	SDL_RenderFillRect(a->r, &b[5]);
-	SDL_RenderFillRect(a->r, &b[6]);
-	SDL_RenderFillRect(a->r, &b[7]);
+	for(u8 i = 5; i < 8;i++){
+		SDL_RenderFillRect(a->r, &b[i]);
+	}
+	SDL_SetRenderDrawColor(a->r, 150, 150, 150, 255);
+	for(u8 i = 9; i < 11;i++){
+		SDL_RenderFillRect(a->r, &b[i]);
+	}
 }
 
 void d(App *a, SDL_Texture **t, const SDL_Rect *b, Song *s){
+	cTM(a,s);
 	dB(a,b);
 	dSL(a,s);
 	dBT(a,t,b);
+}
+
+void w(App *a, SDL_Texture **t, Song *s){
+	wBN(a,s);
+	wSL(a,s);
+	wBT(a,t);
+}
+
+TTF_Font *lF(){
+	
+	TTF_Font *f = TTF_OpenFont("Assets/font.ttf", 8);
+
+	if (f == NULL) {
+		printf("Font failed: %s\n", TTF_GetError());
+	}
+	return f;
 }

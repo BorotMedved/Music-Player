@@ -140,10 +140,37 @@ void sh(App *a, Song *s) {
     Mix_HaltMusic();
     a->cS = 0;
 	wSL(a,s);
-	a->displayChoice = 18;
+	a->dC = 18;
 
     pM(a, s);
 
     SDL_DestroyTexture(a->tN);
     wBN(a, s);
+}
+
+void sV(App *a, u8 v){
+	a->v = v;
+	Mix_VolumeMusic(a->v);
+}
+
+void aV(App *a){
+	if(a->v < 128){
+		a->v += 16;
+		Mix_VolumeMusic(a->v);
+	}
+}
+
+void rV(App *a){
+	if(a->v > 0){
+		a->v -= 16;
+		Mix_VolumeMusic(a->v);
+	}
+}
+
+void m(App *a){
+	if(a->v == 0){
+		sV(a,64);
+	}else{
+		sV(a,0);
+	}
 }

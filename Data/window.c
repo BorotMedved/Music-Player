@@ -3,7 +3,7 @@
 
 void cU(App *a, SDL_Texture **t, Song *s)
 {
-    for (u8 i = 0; i < 7; i++) {
+    for (u8 i = 0; i < 10; i++) {
         SDL_DestroyTexture(t[i]);
 		t[i] = NULL;
     }
@@ -93,20 +93,74 @@ void psS(App *a)
 }
 
 void nL(App *a){
-	u16 barrier = a->displayChoice;
-	if(barrier < a->sC){
-		a->displayChoice += 18;
+	if(a->dC < a->sC){
+		a->dC += 18;
 	}
 }
 
 void bL(App *a){
-	u16 barrier = a->displayChoice;
-	if(barrier > 0){
-		a->displayChoice -= 18;
+	if(a->dC > 0){
+		a->dC -= 18;
 	}
-	if(a->displayChoice <= 0){
-		a->displayChoice = 18;
+	if(a->dC <= 0){
+		a->dC = 18;
 	}
+}
+
+void lS(App *a, Song *s, SDL_Point m){
+	u16 start = a->dC - 18;
+	u16 end = a->dC;
+	for (u16 i = start; i < end && i < a->sC; i++) {
+		if(SDL_PointInRect(&m,&s[i].b)){
+			c(a,s,i);
+		}
+	}
+}
+
+void kC(App *a, Song *s, SDL_Event e){
+	if(e.key.keysym.sym == SDLK_SPACE){
+		pP(a);
+	}else if(e.key.keysym.sym == SDLK_LEFT){
+		bk(a,s);
+	}else if(e.key.keysym.sym == SDLK_RIGHT){
+		n(a,s);
+	}else if(e.key.keysym.sym == SDLK_s){
+		sh(a,s);
+	}else if(e.key.keysym.sym == SDLK_COMMA){
+		rV(a);
+	}else if(e.key.keysym.sym == SDLK_PERIOD){
+		aV(a);
+	}else if(e.key.keysym.sym == SDLK_HASH){
+		m(a);
+	}else if(e.key.keysym.sym == SDLK_a){
+		bL(a);
+	}else if(e.key.keysym.sym == SDLK_d){
+		nL(a);
+	}
+}
+
+void mC(App *a, Song *s, SDL_Event e, const SDL_Rect *b){
+	SDL_Point m = {e.button.x,e.button.y};
+	if(SDL_PointInRect(&m,&b[0])){
+		bk(a,s);
+	}else if(SDL_PointInRect(&m,&b[1])){
+		n(a,s);
+	}else if(SDL_PointInRect(&m,&b[2])){
+		pP(a);
+	}else if(SDL_PointInRect(&m,&b[5])){
+		sh(a,s);
+	}else if(SDL_PointInRect(&m,&b[6])){
+		bL(a);
+	}else if(SDL_PointInRect(&m,&b[7])){
+		nL(a);
+	}else if(SDL_PointInRect(&m,&b[9])){
+		aV(a);
+	}else if(SDL_PointInRect(&m,&b[10])){
+		rV(a);
+	}else{
+		lS(a,s,m);
+	}
+	
 }
 
 void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
@@ -118,16 +172,7 @@ void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
         switch (e.type)
         {
 			case SDL_KEYDOWN:
-				if(e.key.keysym.sym == SDLK_SPACE){
-					pP(a);
-				}else if(e.key.keysym.sym == SDLK_LEFT){
-					bk(a,s);
-				}else if(e.key.keysym.sym == SDLK_RIGHT){
-					n(a,s);
-				}else if(e.key.keysym.sym == SDLK_s){
-					sh(a,s);
-					
-				}
+				kC(a,s,e);
 				break;
 			
             case SDL_QUIT:
@@ -136,35 +181,8 @@ void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
                 break;
 				
 			case SDL_MOUSEBUTTONDOWN:
-				SDL_Point m = {e.button.x,e.button.y};
-				if(SDL_PointInRect(&m,&b[0])){
-					bk(a,s);
-				}
-				if(SDL_PointInRect(&m,&b[1])){
-					n(a,s);
-				}
-				if(SDL_PointInRect(&m,&b[2])){
-					pP(a);
-				}
-				if(SDL_PointInRect(&m,&b[5])){
-					sh(a,s);
-				}
-				if(SDL_PointInRect(&m,&b[6])){
-					bL(a);
-				}
-				if(SDL_PointInRect(&m,&b[7])){
-					nL(a);
-				}
-				
-				u16 start = a->displayChoice - 18;
-				u16 end = a->displayChoice;
-				for (u16 i = start; i < end && i < a->sC; i++) {
-					if(SDL_PointInRect(&m,&s[i].b)){
-					c(a,s,i);
-					}
-				}
-					
-				break;
+				mC(a,s,e,b);
+				break; 
 				
             default:
                 break;
