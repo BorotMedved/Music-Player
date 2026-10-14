@@ -43,12 +43,7 @@ int main(){
 		psS(&a);
 		SDL_Delay(16);
 		if(Mix_PlayingMusic() == 0 && Mix_PausedMusic() != 1){
-			a.cS++;
-			pM(&a,s);
-			
-			SDL_DestroyTexture(a.tN);
-			wBN(&a,s);
-			
+			n(&a,s);
 		}
 	}
 	return 0;

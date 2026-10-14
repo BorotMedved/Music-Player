@@ -14,6 +14,7 @@ typedef uint32_t u32;
 
 typedef struct {
 	char n[256];
+	char dN[256];
 	char p[512];
 	Mix_Music *m;
 	SDL_Rect b;

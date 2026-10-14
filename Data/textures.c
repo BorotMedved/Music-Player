@@ -15,7 +15,7 @@ void wSL(App *a, Song *s){
 		y += 20;
 		s[i].b = (SDL_Rect){4, y, 312, 16};
 		
-		SDL_Surface *t = TTF_RenderUTF8_Solid(a->f,s[i].n, (SDL_Color){255,255,255,255});
+		SDL_Surface *t = TTF_RenderUTF8_Solid(a->f,s[i].dN, (SDL_Color){255,255,255,255});
 		s[i].t = SDL_CreateTextureFromSurface(a->r, t);
 		SDL_FreeSurface(t);
 	}
