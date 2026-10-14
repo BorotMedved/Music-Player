@@ -1,7 +1,7 @@
 #include "window.h"
 
 void wBN(App *a, Song *s){
-	SDL_Surface *t = TTF_RenderUTF8_Solid(a->f,s[a->cS].n, (SDL_Color){255,255,255,255});
+	SDL_Surface *t = TTF_RenderUTF8_Solid(a->f,s[a->cS].dN, (SDL_Color){255,255,255,255});
 	a->tN = SDL_CreateTextureFromSurface(a->r, t);
 	SDL_FreeSurface(t);
 }
