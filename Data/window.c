@@ -16,6 +16,8 @@ void cU(App *a, SDL_Texture **t, Song *s)
 	a->tN = NULL;
     SDL_DestroyTexture(a->cT);
 	a->cT = NULL;
+	
+	Mix_HaltMusic();
 
     for (u8 i = 0; i < a->sC; i++) {
         Mix_FreeMusic(s[i].m);

@@ -1,0 +1,3 @@
+NEED SDL2 and SDL2 Mixer and SDL2 TTF for this to work
+Made using C and a makefile to compile it 
+AI was used as an assistance to use SDL2 mostly and memory allocation since I am new to C

@@ -1,0 +1,17 @@
+Put Songs in the Songs folder only, only .mp3,.flac,.wav play
+DO NOT TOUCH THE .ttf in Assets Folder
+
+MAX SONGS 255
+Only .mp3,.flac,.wav
+Press on song list to activate chosen song with cursor
+
+Press on buttons for them to do actions OR:
+SPACEBAR -> PLAY/PAUSE
+RIGHT ARROW -> NEXT
+LEFT ARROW -> BACK
+S -> SHUFFLE
+A -> BACK SONG LIST
+D -> NEXT SONG LIST
+, -> REDUCE VOLUME
+. -> INCREASE VOLUME
+# -> MUTE, UNMUTE BACK TO 50%

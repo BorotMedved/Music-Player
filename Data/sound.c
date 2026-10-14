@@ -37,6 +37,7 @@ void oD(App *a, SDL_Texture **t, Song *s){
 			displayNameFixing(e,s,i);
 
 			snprintf(s[i].p, sizeof(s[i].p), "Songs/%s", e->d_name);
+			s[i].m = NULL;
 			i++;
 		}
 	}
@@ -53,6 +54,11 @@ void oD(App *a, SDL_Texture **t, Song *s){
 
 void pM(App *a, Song *s)
 {
+	
+	if (a->sC == 0) {
+        return;
+    }
+	
 	u8 st = a->cS;
 	
 	do {
@@ -73,9 +79,6 @@ void pM(App *a, Song *s)
             Mix_PlayMusic(s[a->cS].m, 1);
             return;
         }
-		
-		printf("FAILED TO LOAD: %s\n", s[a->cS].p);
-        printf("Mixer error: %s\n", Mix_GetError());
 
         a->cS++;
 
@@ -89,60 +92,68 @@ void pM(App *a, Song *s)
 
 
 void pP(App *a){
+	if (!Mix_PlayingMusic() && !Mix_PausedMusic()) {
+        return;
+    }
 	a->isP = !a->isP;
-					if(!a->isP){
-						Mix_ResumeMusic();
-					}else{
-						Mix_PauseMusic();
-					}
+	if(!a->isP){
+		Mix_ResumeMusic();
+	}else{
+		Mix_PauseMusic();
+	}
+}
+
+void fS(App *a, Song *s){
+	Mix_HaltMusic();
+	if (s[a->cS].m != NULL) {
+        Mix_FreeMusic(s[a->cS].m);
+        s[a->cS].m = NULL;
+    }
+	if(a->tN != NULL){
+		SDL_DestroyTexture(a->tN);
+		a->tN = NULL;
+	}
 }
 
 void n(App *a, Song *s){
-	Mix_HaltMusic();
+	fS(a,s);
+	if(a->cS == a->sC - 1){
+		a->cS = 0;
+	}else{
+		a->cS++;
+	}
 					
-					if(a->cS == a->sC - 1){
-						a->cS = 0;
-					}else{
-						a->cS++;
-					}
+	pM(a,s);
+	if(a->isP == true){
+		a->isP = false;
+	}
 					
-					pM(a,s);
-					if(a->isP == true){
-						a->isP = false;
-					}
-					
-					SDL_DestroyTexture(a->tN);
-					wBN(a,s);
+	wBN(a,s);
 }
 
 void c(App *a, Song *s, u8 sC){
-	Mix_HaltMusic();
+	fS(a,s);
 	a->cS = sC;
 	pM(a,s);
 	if(a->isP == true){
 		a->isP = false;
 	}
-	SDL_DestroyTexture(a->tN);
 	wBN(a,s);
 }
 
 void bk(App *a, Song *s){
-	
-	Mix_HaltMusic();
+	fS(a,s);
+	if(a->cS == 0){
+	a->cS = a->sC - 1;
+	}else{
+	a->cS--;
+	}
 					
-					if(a->cS == 0){
-						a->cS = a->sC - 1;
-					}else{
-						a->cS--;
-					}
-					
-					pM(a,s);
-					if(a->isP == true){
-						a->isP = false;
-					}
-					
-					SDL_DestroyTexture(a->tN);
-					wBN(a,s);
+	pM(a,s);
+	if(a->isP == true){
+		a->isP = false;
+	}
+	wBN(a,s);
 }
 
 void sh(App *a, Song *s) {
@@ -156,14 +167,12 @@ void sh(App *a, Song *s) {
         s[r] = t;
     }
 
-    Mix_HaltMusic();
+    fS(a,s);
     a->cS = 0;
 	wSL(a,s);
 	a->dC = 18;
 
     pM(a, s);
-
-    SDL_DestroyTexture(a->tN);
     wBN(a, s);
 }
 
