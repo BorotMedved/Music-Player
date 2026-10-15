@@ -157,6 +157,9 @@ void bk(App *a, Song *s){
 }
 
 void sh(App *a, Song *s) {
+	fS(a, s);
+	cSL(a, s);
+	
     u8 count = a->sC;
 
     for (u8 i = count; i > 1; i--) {
@@ -166,11 +169,10 @@ void sh(App *a, Song *s) {
         s[i - 1] = s[r];
         s[r] = t;
     }
-
-    fS(a,s);
+	
     a->cS = 0;
-	wSL(a,s);
 	a->dC = 18;
+	wSL(a,s);
 
     pM(a, s);
     wBN(a, s);

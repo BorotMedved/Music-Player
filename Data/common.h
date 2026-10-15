@@ -39,4 +39,10 @@ typedef struct {
 	u8 v;
 } App;
 
+typedef struct{
+	SDL_Rect bS[3];
+	SDL_Rect bI[8];
+	SDL_Texture *t[10];
+} Graphics;
+
 #endif

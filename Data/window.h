@@ -5,9 +5,7 @@
 #include "common.h"
 
 void cU(App *a, SDL_Texture **t, Song *s);
-void initSDL(App *a);
-void ppS(App *a);
-void psS(App *a);
-void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t);
+void initSDL(App *a,SDL_Texture **t, Song *S);
+void r(App *a,SDL_Texture **t,const SDL_Rect *b,Song *s);
 
 #endif

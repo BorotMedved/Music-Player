@@ -1,8 +1,9 @@
 #include "sound.h"
 #include "window.h"
+#include "textures.h"
+#include <time.h>
 
-void cU(App *a, SDL_Texture **t, Song *s)
-{
+void cU(App *a, SDL_Texture **t, Song *s){
     for (u8 i = 0; i < 10; i++) {
         SDL_DestroyTexture(t[i]);
 		t[i] = NULL;
@@ -38,8 +39,17 @@ void cU(App *a, SDL_Texture **t, Song *s)
     SDL_Quit();
 }
 
-void initSDL(App *a)
-{
+void sU(App *a, SDL_Texture **t, Song *s){
+	srand(time(NULL));
+	a->dC = 18;
+	a->f = TTF_OpenFont("Assets/font.ttf", 8);
+	oD(a,t,s);
+	pM(a,s);
+	w(a,t,s);
+	sV(a, 64);
+}
+
+void initSDL(App *a, SDL_Texture **t, Song *s){
 	Resolution res;
 	res.w = 320;
 	res.h = 480;
@@ -81,32 +91,27 @@ void initSDL(App *a)
 		printf("Mixer failed: %s\n", Mix_GetError());
 	}
 	
+	sU(a,t,s);
+	
 }
 
-void ppS(App *a)
-{
-    SDL_SetRenderDrawColor(a->r, 0, 0, 0, 255);
-    SDL_RenderClear(a->r);
-}
-
-void psS(App *a)
-{
-    SDL_RenderPresent(a->r);
-}
-
-void nL(App *a){
+void nL(App *a, Song *s){
+	cSL(a,s);
 	if(a->dC < a->sC){
 		a->dC += 18;
 	}
+	wSL(a,s);
 }
 
-void bL(App *a){
+void bL(App *a, Song *s){
+	cSL(a,s);
 	if(a->dC > 0){
 		a->dC -= 18;
 	}
 	if(a->dC <= 0){
 		a->dC = 18;
 	}
+	wSL(a,s);
 }
 
 void lS(App *a, Song *s, SDL_Point m){
@@ -135,9 +140,9 @@ void kC(App *a, Song *s, SDL_Event e){
 	}else if(e.key.keysym.sym == SDLK_HASH){
 		m(a);
 	}else if(e.key.keysym.sym == SDLK_a){
-		bL(a);
+		bL(a,s);
 	}else if(e.key.keysym.sym == SDLK_d){
-		nL(a);
+		nL(a,s);
 	}
 }
 
@@ -152,9 +157,9 @@ void mC(App *a, Song *s, SDL_Event e, const SDL_Rect *b){
 	}else if(SDL_PointInRect(&m,&b[5])){
 		sh(a,s);
 	}else if(SDL_PointInRect(&m,&b[6])){
-		bL(a);
+		bL(a,s);
 	}else if(SDL_PointInRect(&m,&b[7])){
-		nL(a);
+		nL(a,s);
 	}else if(SDL_PointInRect(&m,&b[9])){
 		aV(a);
 	}else if(SDL_PointInRect(&m,&b[10])){
@@ -165,8 +170,7 @@ void mC(App *a, Song *s, SDL_Event e, const SDL_Rect *b){
 	
 }
 
-void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
-{
+void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t){
     SDL_Event e;
 
     while (SDL_PollEvent(&e))
@@ -190,4 +194,20 @@ void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t)
                 break;
         }
     }
+}
+
+void pPS(App *a){
+	SDL_SetRenderDrawColor(a->r, 0, 0, 0, 255);
+    SDL_RenderClear(a->r);
+}
+
+void r(App *a,SDL_Texture **t,const SDL_Rect *b,Song *s){
+	pPS(a);
+	d(a, t, b, s);
+	dI(a,b,s, t);
+	SDL_RenderPresent(a->r);
+	SDL_Delay(16);
+	if(Mix_PlayingMusic() == 0 && Mix_PausedMusic() != 1){
+		n(a,s);
+	}
 }
