@@ -39,17 +39,38 @@ void cU(App *a, SDL_Texture **t, Song *s){
     SDL_Quit();
 }
 
-void sU(App *a, SDL_Texture **t, Song *s){
+void sU(App *a, Graphics *g, Song *s){
+	const SDL_Rect bI[8] = {
+		{4,4,64,48}, // Back
+		{204,4,64,48}, // Next
+		{104,4,64,48}, // Play/Pause
+		{280, 16, 26, 26}, // Shuffle
+		{4, 460, 16, 16}, // <-
+		{32, 460, 16, 16}, // ->
+		{300,460,16,16}, // +
+		{280,460,16,16} // -
+	};
+	const SDL_Rect bS[3] = {
+		{4, 64, 256, 32}, // Name
+		{280, 64, 32,32},  // Time
+		{50,460,64,16} // Song Count
+	};
+	
+	memcpy(g->bI, bI, sizeof bI);
+	memcpy(g->bS, bS, sizeof bS);
+	
 	srand(time(NULL));
+	
 	a->dC = 18;
 	a->f = TTF_OpenFont("Assets/font.ttf", 8);
-	oD(a,t,s);
+	
+	oD(a,g->t,s);
 	pM(a,s);
-	w(a,t,s);
+	w(a,g->t,s);
 	sV(a, 64);
 }
 
-void initSDL(App *a, SDL_Texture **t, Song *s){
+void initSDL(App *a, Graphics *g, Song *s){
 	Resolution res;
 	res.w = 320;
 	res.h = 480;
@@ -91,7 +112,7 @@ void initSDL(App *a, SDL_Texture **t, Song *s){
 		printf("Mixer failed: %s\n", Mix_GetError());
 	}
 	
-	sU(a,t,s);
+	sU(a,g,s);
 	
 }
 
@@ -154,15 +175,15 @@ void mC(App *a, Song *s, SDL_Event e, const SDL_Rect *b){
 		n(a,s);
 	}else if(SDL_PointInRect(&m,&b[2])){
 		pP(a);
-	}else if(SDL_PointInRect(&m,&b[5])){
+	}else if(SDL_PointInRect(&m,&b[3])){
 		sh(a,s);
-	}else if(SDL_PointInRect(&m,&b[6])){
+	}else if(SDL_PointInRect(&m,&b[4])){
 		bL(a,s);
-	}else if(SDL_PointInRect(&m,&b[7])){
+	}else if(SDL_PointInRect(&m,&b[5])){
 		nL(a,s);
-	}else if(SDL_PointInRect(&m,&b[9])){
+	}else if(SDL_PointInRect(&m,&b[6])){
 		aV(a);
-	}else if(SDL_PointInRect(&m,&b[10])){
+	}else if(SDL_PointInRect(&m,&b[7])){
 		rV(a);
 	}else{
 		lS(a,s,m);
@@ -170,7 +191,7 @@ void mC(App *a, Song *s, SDL_Event e, const SDL_Rect *b){
 	
 }
 
-void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t){
+void dI(App *a, Graphics *g, Song *s){
     SDL_Event e;
 
     while (SDL_PollEvent(&e))
@@ -182,12 +203,12 @@ void dI(App *a, const SDL_Rect *b, Song *s, SDL_Texture **t){
 				break;
 			
             case SDL_QUIT:
-				cU(a,t,s);
+				cU(a,g->t,s);
 				exit(0);
                 break;
 				
 			case SDL_MOUSEBUTTONDOWN:
-				mC(a,s,e,b);
+				mC(a,s,e,g->bI);
 				break; 
 				
             default:
@@ -201,10 +222,10 @@ void pPS(App *a){
     SDL_RenderClear(a->r);
 }
 
-void r(App *a,SDL_Texture **t,const SDL_Rect *b,Song *s){
+void r(App *a, Graphics *g,Song *s){
 	pPS(a);
-	d(a, t, b, s);
-	dI(a,b,s, t);
+	d(a, g, s);
+	dI(a,g,s);
 	SDL_RenderPresent(a->r);
 	SDL_Delay(16);
 	if(Mix_PlayingMusic() == 0 && Mix_PausedMusic() != 1){

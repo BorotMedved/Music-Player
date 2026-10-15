@@ -61,12 +61,12 @@ void wBT(App *a, SDL_Texture **t){
 		TTF_RenderText_Solid(a->f, "Shuffle", c),
 		TTF_RenderText_Solid(a->f, "<-", c),
 		TTF_RenderText_Solid(a->f, "->", c),
-		TTF_RenderText_Solid(a->f,sC, c),
 		TTF_RenderText_Solid(a->f, "+", c),
-		TTF_RenderText_Solid(a->f, "-", c)
+		TTF_RenderText_Solid(a->f, "-", c),
+		TTF_RenderText_Solid(a->f,sC, c)
 	};
 	
-	for(u16 i = 0; i < 10 ; i++){
+	for(u16 i = 0; i < 10; i++){
 		t[i] = SDL_CreateTextureFromSurface(a->r, bT[i]);
 		SDL_FreeSurface(bT[i]);
 	}
@@ -115,19 +115,20 @@ void dSL(App *a, Song *s){
     }
 }
 
-void dBT(App *a, SDL_Texture **t, const SDL_Rect *b){
-	SDL_RenderCopy(a->r, t[0], NULL, &b[0]);
-	SDL_RenderCopy(a->r, t[1], NULL, &b[1]);
+void dBT(App *a, Graphics *g){
+	SDL_RenderCopy(a->r, g->t[0], NULL, &g->bI[0]);
+	SDL_RenderCopy(a->r, g->t[1], NULL, &g->bI[1]);
 	if(a->isP == true){
-		SDL_RenderCopy(a->r, t[2], NULL, &b[2]);
+		SDL_RenderCopy(a->r, g->t[2], NULL, &g->bI[2]);
 	}
 	else{
-		SDL_RenderCopy(a->r, t[3], NULL, &b[2]);
+		SDL_RenderCopy(a->r, g->t[3], NULL, &g->bI[2]);
 	}
-	SDL_RenderCopy(a->r, a->tN, NULL, &b[3]);
-	SDL_RenderCopy(a->r, a->cT, NULL, &b[4]);
-	for(u8 i = 5; i < 11;i++){
-		SDL_RenderCopy(a->r, t[i-1], NULL, &b[i]);
+	SDL_RenderCopy(a->r, a->tN, NULL, &g->bS[0]);
+	SDL_RenderCopy(a->r, a->cT, NULL, &g->bS[1]);
+	SDL_RenderCopy(a->r, g->t[9], NULL, &g->bS[2]);
+	for(u8 i = 4; i < 9; i++){
+		SDL_RenderCopy(a->r, g->t[i], NULL, &g->bI[i-1]);
 	}
 	
 }
@@ -138,20 +139,20 @@ void dB(App *a, const SDL_Rect *b){
 		SDL_RenderFillRect(a->r, &b[i]);
 	}
 	SDL_SetRenderDrawColor(a->r, 200, 80, 80, 255);
-	for(u8 i = 5; i < 8;i++){
+	for(u8 i = 3; i < 6;i++){
 		SDL_RenderFillRect(a->r, &b[i]);
 	}
 	SDL_SetRenderDrawColor(a->r, 150, 150, 150, 255);
-	for(u8 i = 9; i < 11;i++){
+	for(u8 i = 6; i < 9;i++){
 		SDL_RenderFillRect(a->r, &b[i]);
 	}
 }
 
-void d(App *a, SDL_Texture **t, const SDL_Rect *b, Song *s){
+void d(App *a, Graphics *g, Song *s){
 	cTM(a,s);
-	dB(a,b);
+	dB(a,g->bI);
 	dSL(a,s);
-	dBT(a,t,b);
+	dBT(a,g);
 }
 
 void w(App *a, SDL_Texture **t, Song *s){

@@ -1,7 +1,6 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-
 #include "common.h"
 
 void oD(App *a, SDL_Texture **t, Song *s);
