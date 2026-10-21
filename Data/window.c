@@ -40,7 +40,7 @@ void cU(App *a, SDL_Texture **t, Song *s){
 }
 
 void sU(App *a, Graphics *g, Song *s){
-	const SDL_Rect bI[8] = {
+	const SDL_Rect bI[9] = {
 		{4,4,64,48}, // Back
 		{204,4,64,48}, // Next
 		{104,4,64,48}, // Play/Pause
@@ -48,7 +48,8 @@ void sU(App *a, Graphics *g, Song *s){
 		{4, 460, 16, 16}, // <-
 		{32, 460, 16, 16}, // ->
 		{300,460,16,16}, // +
-		{280,460,16,16} // -
+		{280,460,16,16}, // -
+		{260,460,16,16} // #
 	};
 	const SDL_Rect bS[3] = {
 		{4, 64, 256, 32}, // Name
@@ -67,7 +68,7 @@ void sU(App *a, Graphics *g, Song *s){
 	oD(a,g->t,s);
 	pM(a,s);
 	w(a,g->t,s);
-	sV(a, 64);
+	sV(&a->v, 64);
 }
 
 void initSDL(App *a, Graphics *g, Song *s){
@@ -83,19 +84,17 @@ void initSDL(App *a, Graphics *g, Song *s){
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        printf("Couldn't initialize SDL: %s\n", SDL_GetError());
         exit(1);
     }
 	
 	if (TTF_Init() == -1) {
-		printf("TTF_Init failed: %s\n", TTF_GetError());
+		exit(1);
 	}
 
     a->w = SDL_CreateWindow("Music-Player", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, res.w, res.h, wFlags);
 
     if (!a->w)
     {
-        printf("Failed to open %d x %d w: %s\n", res.w, res.h, SDL_GetError());
         exit(1);
     }
 
@@ -105,11 +104,10 @@ void initSDL(App *a, Graphics *g, Song *s){
 
     if (!a->r)
     {
-        printf("Failed to create r: %s\n", SDL_GetError());
         exit(1);
     }
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-		printf("Mixer failed: %s\n", Mix_GetError());
+		exit(1);
 	}
 	
 	sU(a,g,s);
@@ -117,7 +115,7 @@ void initSDL(App *a, Graphics *g, Song *s){
 }
 
 void nL(App *a, Song *s){
-	cSL(a,s);
+	cSL(a->sC,s);
 	if(a->dC < a->sC){
 		a->dC += 18;
 	}
@@ -125,7 +123,7 @@ void nL(App *a, Song *s){
 }
 
 void bL(App *a, Song *s){
-	cSL(a,s);
+	cSL(a->sC,s);
 	if(a->dC > 0){
 		a->dC -= 18;
 	}
@@ -155,11 +153,11 @@ void kC(App *a, Song *s, SDL_Event e){
 	}else if(e.key.keysym.sym == SDLK_s){
 		sh(a,s);
 	}else if(e.key.keysym.sym == SDLK_COMMA){
-		rV(a);
+		rV(&a->v);
 	}else if(e.key.keysym.sym == SDLK_PERIOD){
-		aV(a);
+		aV(&a->v);
 	}else if(e.key.keysym.sym == SDLK_HASH){
-		m(a);
+		mU(&a->v);
 	}else if(e.key.keysym.sym == SDLK_a){
 		bL(a,s);
 	}else if(e.key.keysym.sym == SDLK_d){
@@ -182,9 +180,11 @@ void mC(App *a, Song *s, SDL_Event e, const SDL_Rect *b){
 	}else if(SDL_PointInRect(&m,&b[5])){
 		nL(a,s);
 	}else if(SDL_PointInRect(&m,&b[6])){
-		aV(a);
+		aV(&a->v);
 	}else if(SDL_PointInRect(&m,&b[7])){
-		rV(a);
+		rV(&a->v);
+	}else if(SDL_PointInRect(&m,&b[8])){
+		mU(&a->v);
 	}else{
 		lS(a,s,m);
 	}
@@ -217,13 +217,13 @@ void dI(App *a, Graphics *g, Song *s){
     }
 }
 
-void pPS(App *a){
-	SDL_SetRenderDrawColor(a->r, 0, 0, 0, 255);
-    SDL_RenderClear(a->r);
+void pPS(SDL_Renderer *r){
+	SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
+    SDL_RenderClear(r);
 }
 
 void r(App *a, Graphics *g,Song *s){
-	pPS(a);
+	pPS(a->r);
 	d(a, g, s);
 	dI(a,g,s);
 	SDL_RenderPresent(a->r);

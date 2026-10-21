@@ -1,7 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <SDL2/SDL_ttf.h>
@@ -41,8 +40,8 @@ typedef struct {
 
 typedef struct{
 	SDL_Rect bS[3];
-	SDL_Rect bI[8];
-	SDL_Texture *t[10];
+	SDL_Rect bI[9];
+	SDL_Texture *t[11];
 } Graphics;
 
 #endif

@@ -10,9 +10,9 @@ void n(App *a, Song *s);
 void bk(App *a, Song *s);
 void sh(App *a, Song *s);
 void c(App *a, Song *s, u8 sC);
-void aV(App *a);
-void rV(App *a);
-void sV(App *a, u8 v);
-void m(App *a);
+void aV(u8 *av);
+void rV(u8 *av);
+void sV(u8 *av, u8 v);
+void mU(u8 *av);
 
 #endif

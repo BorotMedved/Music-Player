@@ -2,22 +2,6 @@
 #include "textures.h"
 #include <dirent.h>
 
-void displayNameFixing(struct dirent *e, Song *s, u8 j){
-	strcpy(s[j].dN, e->d_name);
-	char *ext = strrchr(s[j].dN, '.');
-	if (ext != NULL) {
-		*ext = '\0';
-	}
-	
-	size_t len = strlen(s[j].dN);
-    while (len < 15) {
-        s[j].dN[len] = ' ';
-        len++;
-    }
-
-    s[j].dN[len] = '\0';
-}
-
 void oD(App *a, SDL_Texture **t, Song *s){
 	
 	DIR *dir = opendir("Songs");
@@ -34,7 +18,19 @@ void oD(App *a, SDL_Texture **t, Song *s){
 		if(strstr(e->d_name, ".mp3") != NULL || strstr(e->d_name, ".flac") != NULL || strstr(e->d_name, ".wav") != NULL){
 			strcpy(s[i].n, e->d_name);
 			
-			displayNameFixing(e,s,i);
+			strcpy(s[i].dN, e->d_name);
+			char *ext = strrchr(s[i].dN, '.');
+			if (ext != NULL) {
+				*ext = '\0';
+			}
+			
+			size_t len = strlen(s[i].dN);
+			while (len < 15) {
+				s[i].dN[len] = ' ';
+				len++;
+			}
+
+			s[i].dN[len] = '\0';
 
 			snprintf(s[i].p, sizeof(s[i].p), "Songs/%s", e->d_name);
 			s[i].m = NULL;
@@ -52,8 +48,7 @@ void oD(App *a, SDL_Texture **t, Song *s){
 	
 }
 
-void pM(App *a, Song *s)
-{
+void pM(App *a, Song *s){
 	
 	if (a->sC == 0) {
         return;
@@ -115,6 +110,12 @@ void fS(App *a, Song *s){
 	}
 }
 
+void tOisP(App *a){
+	if(a->isP == true){
+		a->isP = false;
+	}
+}
+
 void n(App *a, Song *s){
 	fS(a,s);
 	if(a->cS == a->sC - 1){
@@ -122,12 +123,10 @@ void n(App *a, Song *s){
 	}else{
 		a->cS++;
 	}
-					
+	
 	pM(a,s);
-	if(a->isP == true){
-		a->isP = false;
-	}
-					
+	tOisP(a);
+
 	wBN(a,s);
 }
 
@@ -135,30 +134,27 @@ void c(App *a, Song *s, u8 sC){
 	fS(a,s);
 	a->cS = sC;
 	pM(a,s);
-	if(a->isP == true){
-		a->isP = false;
-	}
+	tOisP(a);
 	wBN(a,s);
 }
 
 void bk(App *a, Song *s){
 	fS(a,s);
 	if(a->cS == 0){
-	a->cS = a->sC - 1;
+		a->cS = a->sC - 1;
 	}else{
-	a->cS--;
+		a->cS--;
 	}
-					
+	
 	pM(a,s);
-	if(a->isP == true){
-		a->isP = false;
-	}
+	tOisP(a);
+	
 	wBN(a,s);
 }
 
 void sh(App *a, Song *s) {
 	fS(a, s);
-	cSL(a, s);
+	cSL(a->sC, s);
 	
     u8 count = a->sC;
 
@@ -178,29 +174,29 @@ void sh(App *a, Song *s) {
     wBN(a, s);
 }
 
-void sV(App *a, u8 v){
-	a->v = v;
-	Mix_VolumeMusic(a->v);
+void sV(u8 *av, u8 v){
+	*av = v;
+	Mix_VolumeMusic(*av);
 }
 
-void aV(App *a){
-	if(a->v < 128){
-		a->v += 16;
-		Mix_VolumeMusic(a->v);
+void aV(u8 *av){
+	if(*av < 128){
+		*av += 16;
+		Mix_VolumeMusic(*av);
 	}
 }
 
-void rV(App *a){
-	if(a->v > 0){
-		a->v -= 16;
-		Mix_VolumeMusic(a->v);
+void rV(u8 *av){
+	if(*av > 0){
+		*av -= 16;
+		Mix_VolumeMusic(*av);
 	}
 }
 
-void m(App *a){
-	if(a->v == 0){
-		sV(a,64);
+void mU(u8 *av){
+	if(*av == 0){
+		sV(av,64);
 	}else{
-		sV(a,0);
+		sV(av,0);
 	}
 }

@@ -1,7 +1,7 @@
 #include "window.h"
 
-void cSL(App *a, Song *s){
-    for (u16 i = 0; i < a->sC; i++) {
+void cSL(u8 sC, Song *s){
+    for (u16 i = 0; i < sC; i++) {
 		SDL_DestroyTexture(s[i].t);
 		s[i].t = NULL;
     }
@@ -53,7 +53,7 @@ void wBT(App *a, SDL_Texture **t){
 	const SDL_Color c = {255,255,255,255};
 	char sC[32];
 	snprintf(sC, sizeof(sC), "Songs: %u", (unsigned)a->sC);
-	SDL_Surface *bT[10] = {
+	SDL_Surface *bT[11] = {
 		TTF_RenderText_Solid(a->f, "Back", c), 
 		TTF_RenderText_Solid(a->f, "Next", c),
 		TTF_RenderText_Solid(a->f, "Play", c),
@@ -63,10 +63,11 @@ void wBT(App *a, SDL_Texture **t){
 		TTF_RenderText_Solid(a->f, "->", c),
 		TTF_RenderText_Solid(a->f, "+", c),
 		TTF_RenderText_Solid(a->f, "-", c),
+		TTF_RenderText_Solid(a->f,"~", c),
 		TTF_RenderText_Solid(a->f,sC, c)
 	};
 	
-	for(u16 i = 0; i < 10; i++){
+	for(u16 i = 0; i < 11; i++){
 		t[i] = SDL_CreateTextureFromSurface(a->r, bT[i]);
 		SDL_FreeSurface(bT[i]);
 	}
@@ -116,41 +117,43 @@ void dSL(App *a, Song *s){
 }
 
 void dBT(App *a, Graphics *g){
-	SDL_RenderCopy(a->r, g->t[0], NULL, &g->bI[0]);
-	SDL_RenderCopy(a->r, g->t[1], NULL, &g->bI[1]);
+	SDL_RenderCopy(a->r, a->tN, NULL, &g->bS[0]);
+	SDL_RenderCopy(a->r, a->cT, NULL, &g->bS[1]);
+	SDL_RenderCopy(a->r, g->t[10], NULL, &g->bS[2]);
+	
 	if(a->isP == true){
 		SDL_RenderCopy(a->r, g->t[2], NULL, &g->bI[2]);
 	}
 	else{
 		SDL_RenderCopy(a->r, g->t[3], NULL, &g->bI[2]);
 	}
-	SDL_RenderCopy(a->r, a->tN, NULL, &g->bS[0]);
-	SDL_RenderCopy(a->r, a->cT, NULL, &g->bS[1]);
-	SDL_RenderCopy(a->r, g->t[9], NULL, &g->bS[2]);
-	for(u8 i = 4; i < 9; i++){
+	SDL_RenderCopy(a->r, g->t[0], NULL, &g->bI[0]);
+	SDL_RenderCopy(a->r, g->t[1], NULL, &g->bI[1]);
+	for(u8 i = 4; i < 10; i++){
 		SDL_RenderCopy(a->r, g->t[i], NULL, &g->bI[i-1]);
 	}
 	
 }
 
-void dB(App *a, const SDL_Rect *b){
-	SDL_SetRenderDrawColor(a->r, 100, 100, 100, 255);
+void dB(SDL_Renderer *r, const SDL_Rect *b){
+	SDL_SetRenderDrawColor(r, 100, 100, 100, 255);
 	for(u8 i = 0; i < 3;i++){
-		SDL_RenderFillRect(a->r, &b[i]);
+		SDL_RenderFillRect(r, &b[i]);
 	}
-	SDL_SetRenderDrawColor(a->r, 200, 80, 80, 255);
+	SDL_SetRenderDrawColor(r, 200, 80, 80, 255);
 	for(u8 i = 3; i < 6;i++){
-		SDL_RenderFillRect(a->r, &b[i]);
+		SDL_RenderFillRect(r, &b[i]);
 	}
-	SDL_SetRenderDrawColor(a->r, 150, 150, 150, 255);
-	for(u8 i = 6; i < 9;i++){
-		SDL_RenderFillRect(a->r, &b[i]);
+	SDL_RenderFillRect(r, &b[8]);
+	SDL_SetRenderDrawColor(r, 150, 150, 150, 255);
+	for(u8 i = 6; i < 8;i++){
+		SDL_RenderFillRect(r, &b[i]);
 	}
 }
 
 void d(App *a, Graphics *g, Song *s){
 	cTM(a,s);
-	dB(a,g->bI);
+	dB(a->r,g->bI);
 	dSL(a,s);
 	dBT(a,g);
 }
