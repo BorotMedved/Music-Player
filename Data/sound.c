@@ -24,6 +24,8 @@ void oD(App *a, SDL_Texture **t, Song *s){
 				*ext = '\0';
 			}
 			
+			s[i].dN[32] = '\0';
+			
 			size_t len = strlen(s[i].dN);
 			while (len < 15) {
 				s[i].dN[len] = ' ';
