@@ -4,7 +4,7 @@
 #include <time.h>
 
 void cU(App *a, SDL_Texture **t, Song *s){
-    for (u8 i = 0; i < 11; i++) {
+    for (u8 i = 0; i < 12; i++) {
         SDL_DestroyTexture(t[i]);
 		t[i] = NULL;
     }
@@ -64,6 +64,7 @@ void sU(App *a, Graphics *g, Song *s){
 	srand(time(NULL));
 	
 	a->l = false;
+	a->e = true;
 	a->dC = 18;
 	a->f = TTF_OpenFont("Assets/font.ttf", 8);
 	
@@ -174,6 +175,10 @@ void kC(App *a, Song *s, SDL_Event e){
 		nL(a,s);
 	}else if(e.key.keysym.sym == SDLK_l){
 		l(a);
+	}else if(e.key.keysym.sym == SDLK_l){
+		l(a);
+	}else if(e.key.keysym.sym == SDLK_r){
+		a->e = false;
 	}
 }
 

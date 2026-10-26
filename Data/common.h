@@ -37,6 +37,7 @@ typedef struct {
 	u8 v;
 	bool l;
 	bool isP;
+	bool e;
 } App;
 
 typedef struct{

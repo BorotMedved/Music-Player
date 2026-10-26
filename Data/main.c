@@ -12,8 +12,13 @@ int main(){
 	
 	initSDL(&a,&g,s);
 	
-	while(1){
+	do{
 		r(&a,&g,s);
-	}
+		if(a.e == false){
+			cU(&a,g.t,s);
+			initSDL(&a,&g,s);
+		}
+	}while(a.e == true);
+	
 	return 0;
 }
