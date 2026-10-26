@@ -53,7 +53,7 @@ void wBT(App *a, SDL_Texture **t){
 	const SDL_Color c = {255,255,255,255};
 	char sC[32];
 	snprintf(sC, sizeof(sC), "Songs: %u", (unsigned)a->sC);
-	SDL_Surface *bT[11] = {
+	SDL_Surface *bT[13] = {
 		TTF_RenderText_Solid(a->f, "Back", c), 
 		TTF_RenderText_Solid(a->f, "Next", c),
 		TTF_RenderText_Solid(a->f, "Play", c),
@@ -64,10 +64,12 @@ void wBT(App *a, SDL_Texture **t){
 		TTF_RenderText_Solid(a->f, "+", c),
 		TTF_RenderText_Solid(a->f, "-", c),
 		TTF_RenderText_Solid(a->f,"~", c),
-		TTF_RenderText_Solid(a->f,sC, c)
+		TTF_RenderText_Solid(a->f,sC, c),
+		TTF_RenderText_Solid(a->f,"Loop", c),
+		TTF_RenderText_Solid(a->f,"Looping", c)
 	};
 	
-	for(u16 i = 0; i < 11; i++){
+	for(u16 i = 0; i < 13; i++){
 		t[i] = SDL_CreateTextureFromSurface(a->r, bT[i]);
 		SDL_FreeSurface(bT[i]);
 	}
@@ -126,7 +128,13 @@ void dBT(App *a, Graphics *g){
 	}
 	else{
 		SDL_RenderCopy(a->r, g->t[3], NULL, &g->bI[2]);
+	}	
+	if(a->l == true){
+		SDL_RenderCopy(a->r, g->t[12], NULL, &g->bI[9]);
 	}
+	else{
+		SDL_RenderCopy(a->r, g->t[11], NULL, &g->bI[9]);
+	}	
 	SDL_RenderCopy(a->r, g->t[0], NULL, &g->bI[0]);
 	SDL_RenderCopy(a->r, g->t[1], NULL, &g->bI[1]);
 	for(u8 i = 4; i < 10; i++){
@@ -140,13 +148,19 @@ void dB(SDL_Renderer *r, const SDL_Rect *b){
 	for(u8 i = 0; i < 3;i++){
 		SDL_RenderFillRect(r, &b[i]);
 	}
+	
 	SDL_SetRenderDrawColor(r, 200, 80, 80, 255);
 	for(u8 i = 3; i < 6;i++){
 		SDL_RenderFillRect(r, &b[i]);
 	}
-	SDL_RenderFillRect(r, &b[8]);
+	
 	SDL_SetRenderDrawColor(r, 150, 150, 150, 255);
 	for(u8 i = 6; i < 8;i++){
+		SDL_RenderFillRect(r, &b[i]);
+	}
+	
+	SDL_SetRenderDrawColor(r, 150, 10, 10, 255);
+	for(u8 i = 8; i < 10;i++){
 		SDL_RenderFillRect(r, &b[i]);
 	}
 }

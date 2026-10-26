@@ -28,7 +28,6 @@ typedef struct {
 typedef struct {
 	SDL_Renderer *r;
 	SDL_Window *w;
-	bool isP;
 	u8 cS;
 	SDL_Texture *tN;
 	SDL_Texture *cT;
@@ -36,12 +35,14 @@ typedef struct {
 	u8 sC;
 	u16 dC; 
 	u8 v;
+	bool l;
+	bool isP;
 } App;
 
 typedef struct{
 	SDL_Rect bS[3];
-	SDL_Rect bI[9];
-	SDL_Texture *t[11];
+	SDL_Rect bI[10];
+	SDL_Texture *t[13];
 } Graphics;
 
 #endif

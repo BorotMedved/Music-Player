@@ -4,7 +4,7 @@
 #include <time.h>
 
 void cU(App *a, SDL_Texture **t, Song *s){
-    for (u8 i = 0; i < 10; i++) {
+    for (u8 i = 0; i < 11; i++) {
         SDL_DestroyTexture(t[i]);
 		t[i] = NULL;
     }
@@ -40,16 +40,17 @@ void cU(App *a, SDL_Texture **t, Song *s){
 }
 
 void sU(App *a, Graphics *g, Song *s){
-	const SDL_Rect bI[9] = {
+	const SDL_Rect bI[10] = {
 		{4,4,64,48}, // Back
 		{204,4,64,48}, // Next
 		{104,4,64,48}, // Play/Pause
-		{280, 16, 26, 26}, // Shuffle
+		{276, 4, 40, 20}, // Shuffle
 		{4, 460, 16, 16}, // <-
 		{32, 460, 16, 16}, // ->
 		{300,460,16,16}, // +
 		{280,460,16,16}, // -
-		{260,460,16,16} // #
+		{260,460,16,16}, // #
+		{276, 32, 40, 20} // Loop
 	};
 	const SDL_Rect bS[3] = {
 		{4, 64, 256, 32}, // Name
@@ -62,6 +63,7 @@ void sU(App *a, Graphics *g, Song *s){
 	
 	srand(time(NULL));
 	
+	a->l = false;
 	a->dC = 18;
 	a->f = TTF_OpenFont("Assets/font.ttf", 8);
 	
@@ -133,6 +135,14 @@ void bL(App *a, Song *s){
 	wSL(a,s);
 }
 
+void l(App *a){
+	if(a->l == false){
+		a->l = true;
+	} else {
+		a->l = false;
+	}
+}
+
 void lS(App *a, Song *s, SDL_Point m){
 	u16 start = a->dC - 18;
 	u16 end = a->dC;
@@ -162,6 +172,8 @@ void kC(App *a, Song *s, SDL_Event e){
 		bL(a,s);
 	}else if(e.key.keysym.sym == SDLK_d){
 		nL(a,s);
+	}else if(e.key.keysym.sym == SDLK_l){
+		l(a);
 	}
 }
 
@@ -185,6 +197,8 @@ void mC(App *a, Song *s, SDL_Event e, const SDL_Rect *b){
 		rV(&a->v);
 	}else if(SDL_PointInRect(&m,&b[8])){
 		mU(&a->v);
+	}else if(SDL_PointInRect(&m,&b[9])){
+		l(a);
 	}else{
 		lS(a,s,m);
 	}
@@ -229,6 +243,11 @@ void r(App *a, Graphics *g,Song *s){
 	SDL_RenderPresent(a->r);
 	SDL_Delay(16);
 	if(Mix_PlayingMusic() == 0 && Mix_PausedMusic() != 1){
-		n(a,s);
+		if(a->l == false){
+			n(a,s);
+		} else {
+			pM(a,s);
+		}
+		
 	}
 }

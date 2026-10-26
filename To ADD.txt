@@ -1,0 +1,6 @@
+- Add a way to open a specific song (like VLC) for .mp3 files
+- Add a way to access either MEGA or Google Drive or Dropbox and play the songs without actually being downloaded on the device
+- Reload whole App button instead of having to open and close after file updates
+
+
+
