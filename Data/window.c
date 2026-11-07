@@ -1,6 +1,7 @@
 #include "sound.h"
 #include "window.h"
 #include "textures.h"
+#include "font_data.h"
 #include <time.h>
 
 void cU(App *a, SDL_Texture **t, Song *s){
@@ -66,7 +67,7 @@ void sU(App *a, Graphics *g, Song *s, const char *openPath){
 	a->l = false;
 	a->e = true;
 	a->dC = 18;
-	a->f = TTF_OpenFont("Assets/font.ttf", 8);
+	a->f = TTF_OpenFontRW(SDL_RWFromConstMem(font_ttf, (int)font_ttf_len), 1, 8);
 	
 	if (openPath != NULL) {
         oF(a, s, openPath);
