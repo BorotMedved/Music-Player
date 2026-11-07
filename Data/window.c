@@ -168,9 +168,9 @@ void kC(App *a, Song *s, SDL_Event e){
 		n(a,s);
 	}else if(e.key.keysym.sym == SDLK_s){
 		sh(a,s);
-	}else if(e.key.keysym.sym == SDLK_COMMA){
+	}else if(e.key.keysym.sym == SDLK_DOWN){
 		rV(&a->v);
-	}else if(e.key.keysym.sym == SDLK_PERIOD){
+	}else if(e.key.keysym.sym == SDLK_UP){
 		aV(&a->v);
 	}else if(e.key.keysym.sym == SDLK_HASH){
 		mU(&a->v);

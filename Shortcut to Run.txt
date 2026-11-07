@@ -1,3 +1,12 @@
 cmd /k "cd /d "$(CURRENT_DIRECTORY)\.." && mingw32-make && Player.exe"
 Or 
 Alt + y in notepad++
+
+OR
+
+IN mingw64:
+
+cd C:/Users/zvens/Development/Music-Player
+mingw32-make
+
+Output: Player.exe
