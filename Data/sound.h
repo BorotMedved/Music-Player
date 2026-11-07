@@ -4,6 +4,7 @@
 #include "common.h"
 
 void oD(App *a, SDL_Texture **t, Song *s);
+void oF(App *a, Song *s, const char *path);
 void pM(App *a, Song *s);
 void pP(App *a);
 void n(App *a, Song *s);

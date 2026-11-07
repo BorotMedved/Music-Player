@@ -50,6 +50,33 @@ void oD(App *a, SDL_Texture **t, Song *s){
 	
 }
 
+void oF(App *a, Song *s, const char *path)
+{
+    const char *name = strrchr(path, '\\');
+    const char *slash = strrchr(path, '/');
+
+    if (slash != NULL && (name == NULL || slash > name))
+        name = slash;
+
+    name = (name != NULL) ? name + 1 : path;
+
+    snprintf(s[0].n, sizeof s[0].n, "%s", name);
+    snprintf(s[0].dN, sizeof s[0].dN, "%s", name);
+
+    char *ext = strrchr(s[0].dN, '.');
+    if (ext != NULL)
+        *ext = '\0';
+
+    s[0].dN[32] = '\0';
+
+    snprintf(s[0].p, sizeof s[0].p, "%s", path);
+
+    s[0].m = NULL;
+
+    a->sC = 1;
+    a->cS = 0;
+}
+
 void pM(App *a, Song *s){
 	
 	if (a->sC == 0) {

@@ -39,7 +39,7 @@ void cU(App *a, SDL_Texture **t, Song *s){
     SDL_Quit();
 }
 
-void sU(App *a, Graphics *g, Song *s){
+void sU(App *a, Graphics *g, Song *s, const char *openPath){
 	const SDL_Rect bI[10] = {
 		{4,4,64,48}, // Back
 		{204,4,64,48}, // Next
@@ -68,13 +68,18 @@ void sU(App *a, Graphics *g, Song *s){
 	a->dC = 18;
 	a->f = TTF_OpenFont("Assets/font.ttf", 8);
 	
-	oD(a,g->t,s);
+	if (openPath != NULL) {
+        oF(a, s, openPath);
+    } else {
+        oD(a, g->t, s);
+    }
+	
 	pM(a,s);
 	w(a,g->t,s);
 	sV(&a->v, 64);
 }
 
-void initSDL(App *a, Graphics *g, Song *s){
+void initSDL(App *a, Graphics *g, Song *s, const char *openPath){
 	Resolution res;
 	res.w = 320;
 	res.h = 480;
@@ -94,7 +99,7 @@ void initSDL(App *a, Graphics *g, Song *s){
 		exit(1);
 	}
 
-    a->w = SDL_CreateWindow("Music-Player", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, res.w, res.h, wFlags);
+    a->w = SDL_CreateWindow("Музыка Плеер", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, res.w, res.h, wFlags);
 
     if (!a->w)
     {
@@ -113,7 +118,7 @@ void initSDL(App *a, Graphics *g, Song *s){
 		exit(1);
 	}
 	
-	sU(a,g,s);
+	sU(a,g,s, openPath);
 	
 }
 

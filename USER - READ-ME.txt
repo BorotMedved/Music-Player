@@ -16,3 +16,4 @@ D -> NEXT SONG LIST
 . -> INCREASE VOLUME
 # -> MUTE, UNMUTE BACK TO 50%
 l -> LOOP SAME SONG
+R -> refresh app
